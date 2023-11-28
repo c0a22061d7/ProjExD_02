@@ -38,7 +38,7 @@ def main():
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     go_img = pg.transform.rotozoom(go_img, 0, 2.0)
     kk_img1 = pg.transform.flip(kk_img, True, False)
-    muki = {
+    muki = { #こうかとんの向き変更の辞書
         (0, 0):kk_img,
         (0, -5):pg.transform.rotozoom(kk_img1, 90, 1.0),
         (+5, -5):pg.transform.rotozoom(kk_img1, 45, 1.0),
@@ -67,10 +67,11 @@ def main():
                 return
         
         if kk_rct.colliderect(bb_rct):
-            screen.blit(go_img, kk_rct)
-            pg.display.update()
+            kk_img.set_alpha(0)
+            screen.blit(go_img, kk_rct) #泣いているこうかとんの表示
+            pg.display.update() #画面の更新
             print("Game Over")
-            time.sleep(5)
+            time.sleep(5) #タブを閉じるまで5秒間状態維持
             return
             
         key_lst = pg.key.get_pressed()
@@ -80,7 +81,7 @@ def main():
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
         
-        kk_img = muki[tuple(sum_mv)]
+        kk_img = muki[tuple(sum_mv)] #向き変更したこうかとんの表示
 
         screen.blit(bg_img, [0, 0])
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
