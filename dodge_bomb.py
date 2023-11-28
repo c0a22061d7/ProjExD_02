@@ -1,4 +1,5 @@
 import random
+import time
 import sys
 import pygame as pg
 
@@ -33,7 +34,21 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
     kk_img = pg.image.load("fig/3.png")
+    go_img = pg.image.load("fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    go_img = pg.transform.rotozoom(go_img, 0, 2.0)
+    kk_img1 = pg.transform.flip(kk_img, True, False)
+    muki = {
+        (0, 0):kk_img,
+        (0, -5):pg.transform.rotozoom(kk_img1, 90, 1.0),
+        (+5, -5):pg.transform.rotozoom(kk_img1, 45, 1.0),
+        (+5, 0):kk_img1,
+        (+5, +5):pg.transform.rotozoom(kk_img1, -45, 1.0),
+        (0, +5):pg.transform.rotozoom(kk_img1, -90, 1.0),
+        (-5, +5):pg.transform.rotozoom(kk_img, 45, 1.0),
+        (-5, 0):kk_img,
+        (-5, -5):pg.transform.rotozoom(kk_img, -45, 1.0),
+    }
     kk_rct = kk_img.get_rect()  # 練習３：こうかとんSurfaceのRectを抽出する
     kk_rct.center = 900, 400  # 練習３：こうかとんの初期座標
     bb_img = pg.Surface((20, 20))   # 練習１：透明のSurfaceを作る
@@ -50,6 +65,13 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+        
+        if kk_rct.colliderect(bb_rct):
+            screen.blit(go_img, kk_rct)
+            pg.display.update()
+            print("Game Over")
+            time.sleep(5)
+            return
             
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -58,6 +80,7 @@ def main():
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
         
+        kk_img = muki[tuple(sum_mv)]
 
         screen.blit(bg_img, [0, 0])
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
